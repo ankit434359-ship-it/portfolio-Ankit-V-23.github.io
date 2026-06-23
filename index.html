@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ankit Vishwakarma — Oracle PL/SQL Developer</title>
+<meta name="description" content="Oracle PL/SQL developer with 4 years building and tuning database backends for enterprise telecom systems. Open to backend roles and freelance projects." />
+
+<!-- ============ FONTS ============ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  /* ============ TOKENS ============ */
+  :root{
+    --ink:        #0d1318;   /* canvas: near-black, cool petrol undertone */
+    --ink-raised: #141d24;   /* lifted panels */
+    --ink-deep:   #0a0f13;   /* nav / footer */
+    --line:       #232f38;   /* schema hairlines */
+    --line-soft:  #1a242b;   /* fainter grid */
+    --paper:      #e9eef1;   /* primary text */
+    --muted:      #81909b;   /* secondary text */
+    --muted-dim:  #5b6873;   /* captions */
+    --brass:      #d8a24a;   /* warm metallic accent */
+    --brass-dim:  #a87f3c;
+    --cyan:       #67b6c6;   /* sparing syntax accent */
+    --rose:       #cf7a6b;   /* sparing syntax accent */
+
+    --maxw: 1080px;
+    --gut: clamp(20px, 5vw, 56px);
+
+    --f-display: "Space Grotesk", system-ui, sans-serif;
+    --f-body: "Inter", system-ui, sans-serif;
+    --f-mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:var(--f-body);
+    font-size:16px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  /* faint vertical column lines — "table columns" behind everything */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:0;
+    pointer-events:none;
+    background-image:repeating-linear-gradient(
+      to right,
+      transparent 0,
+      transparent calc(20% - 1px),
+      var(--line-soft) calc(20% - 1px),
+      var(--line-soft) 20%
+    );
+    opacity:.55;
+    mask-image:linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
+  }
+
+  ::selection{ background:var(--brass); color:#0a0f13; }
+
+  a{ color:inherit; text-decoration:none; }
+
+  /* ============ LAYOUT ============ */
+  .wrap{
+    width:100%;
+    max-width:var(--maxw);
+    margin-inline:auto;
+    padding-inline:var(--gut);
+    position:relative;
+    z-index:1;
+  }
+
+  section{ position:relative; z-index:1; }
+
+  .eyebrow{
+    font-family:var(--f-mono);
+    font-size:13px;
+    letter-spacing:.04em;
+    color:var(--brass);
+    display:inline-flex;
+    align-items:center;
+    gap:.55em;
+    margin-bottom:1.4rem;
+  }
+  .eyebrow::before{ content:"--"; color:var(--muted-dim); }
+
+  .sec-head{
+    font-family:var(--f-display);
+    font-weight:600;
+    font-size:clamp(1.7rem, 4vw, 2.6rem);
+    letter-spacing:-0.02em;
+    line-height:1.1;
+    margin-bottom:.6rem;
+  }
+  .sec-sub{
+    color:var(--muted);
+    max-width:58ch;
+    margin-bottom:3rem;
+  }
+
+  /* ============ NAV ============ */
+  nav{
+    position:sticky;
+    top:0;
+    z-index:50;
+    background:color-mix(in srgb, var(--ink-deep) 86%, transparent);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .nav-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    height:62px;
+  }
+  .brand{
+    font-family:var(--f-mono);
+    font-weight:600;
+    font-size:14px;
+    letter-spacing:.02em;
+    color:var(--paper);
+  }
+  .brand span{ color:var(--brass); }
+  .nav-links{ display:flex; align-items:center; gap:2rem; }
+  .nav-links a{
+    font-family:var(--f-mono);
+    font-size:13px;
+    color:var(--muted);
+    transition:color .2s ease;
+  }
+  .nav-links a:hover{ color:var(--paper); }
+  .nav-cta{
+    font-family:var(--f-mono);
+    font-size:13px;
+    padding:.5em 1em;
+    border:1px solid var(--line);
+    border-radius:4px;
+    color:var(--paper) !important;
+    transition:border-color .2s ease, color .2s ease;
+  }
+  .nav-cta:hover{ border-color:var(--brass); color:var(--brass) !important; }
+  .nav-toggle{ display:none; }
+
+  /* ============ HERO ============ */
+  .hero{ padding:clamp(4rem, 11vh, 8rem) 0 clamp(3.5rem, 8vh, 6rem); }
+
+  .query{
+    font-family:var(--f-mono);
+    font-size:clamp(13px, 1.5vw, 15px);
+    line-height:1.85;
+    background:var(--ink-raised);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:1.1rem 1.3rem;
+    max-width:480px;
+    margin-bottom:2.2rem;
+    box-shadow:0 20px 50px -30px rgba(0,0,0,.9);
+  }
+  .query .cmt{ color:var(--muted-dim); }
+  .query .kw{ color:var(--brass); }
+  .query .str{ color:var(--cyan); }
+  .query .bool{ color:var(--rose); }
+  .query-foot{
+    font-family:var(--f-mono);
+    font-size:12px;
+    color:var(--muted-dim);
+    margin:-1.4rem 0 2.4rem;
+    display:flex;
+    align-items:center;
+    gap:.5em;
+  }
+  .query-foot::before{ content:"→"; color:var(--brass); }
+
+  .hero h1{
+    font-family:var(--f-display);
+    font-weight:700;
+    font-size:clamp(2.7rem, 8.5vw, 5.4rem);
+    line-height:0.96;
+    letter-spacing:-0.035em;
+    margin-bottom:1.1rem;
+  }
+  .hero .role{
+    font-family:var(--f-mono);
+    font-size:clamp(14px, 2vw, 17px);
+    color:var(--brass);
+    margin-bottom:1.6rem;
+    letter-spacing:.01em;
+  }
+  .hero .pitch{
+    font-size:clamp(1.05rem, 2.2vw, 1.3rem);
+    color:var(--paper);
+    max-width:60ch;
+    margin-bottom:2.2rem;
+    line-height:1.55;
+  }
+  .hero .pitch b{ color:var(--brass); font-weight:600; }
+
+  .badges{ display:flex; flex-wrap:wrap; gap:.7rem; margin-bottom:2.4rem; }
+  .badge{
+    font-family:var(--f-mono);
+    font-size:12.5px;
+    color:var(--muted);
+    border:1px solid var(--line);
+    border-radius:100px;
+    padding:.45em 1em;
+    display:inline-flex;
+    align-items:center;
+    gap:.55em;
+  }
+  .dot{ width:7px; height:7px; border-radius:50%; background:var(--brass); box-shadow:0 0 0 3px color-mix(in srgb, var(--brass) 22%, transparent); }
+  .dot.live{ animation:pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{ opacity:1 } 50%{ opacity:.4 } }
+
+  .cta-row{ display:flex; flex-wrap:wrap; gap:.9rem; }
+  .btn{
+    font-family:var(--f-mono);
+    font-size:14px;
+    padding:.85em 1.5em;
+    border-radius:5px;
+    display:inline-flex;
+    align-items:center;
+    gap:.6em;
+    transition:transform .18s ease, background .2s ease, border-color .2s ease, color .2s ease;
+    cursor:pointer;
+    border:1px solid transparent;
+  }
+  .btn-primary{ background:var(--brass); color:#0a0f13; font-weight:600; }
+  .btn-primary:hover{ transform:translateY(-2px); background:#e6b25c; }
+  .btn-ghost{ border-color:var(--line); color:var(--paper); }
+  .btn-ghost:hover{ border-color:var(--brass); color:var(--brass); transform:translateY(-2px); }
+
+  /* ============ SECTION SPACING ============ */
+  .block{ padding:clamp(3.5rem, 9vh, 6.5rem) 0; border-top:1px solid var(--line-soft); }
+
+  /* ============ ABOUT ============ */
+  .about-grid{ display:grid; grid-template-columns:1.5fr 1fr; gap:clamp(2rem,5vw,4rem); align-items:start; }
+  .about-body p{ color:var(--muted); font-size:1.08rem; margin-bottom:1.2rem; max-width:54ch; }
+  .about-body p b{ color:var(--paper); font-weight:500; }
+  .offclock{ font-family:var(--f-mono); font-size:13px; color:var(--muted-dim); margin-top:.5rem; }
+  .offclock b{ color:var(--brass); }
+
+  .stats{
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow:hidden;
+    background:var(--ink-raised);
+  }
+  .stat{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:1rem;
+    padding:1.05rem 1.25rem;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .stat:last-child{ border-bottom:0; }
+  .stat .n{ font-family:var(--f-mono); font-weight:600; font-size:1.5rem; color:var(--brass); letter-spacing:-0.01em; }
+  .stat .l{ font-size:13px; color:var(--muted); text-align:right; }
+
+  /* ============ SKILLS (schema tables) ============ */
+  .schema{ display:grid; grid-template-columns:repeat(2,1fr); gap:1.1rem; }
+  .table-card{
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:var(--ink-raised);
+    overflow:hidden;
+    transition:border-color .25s ease, transform .25s ease;
+  }
+  .table-card:hover{ border-color:var(--brass-dim); transform:translateY(-3px); }
+  .table-card .th{
+    font-family:var(--f-mono);
+    font-size:13px;
+    color:var(--paper);
+    padding:.8rem 1.1rem;
+    border-bottom:1px solid var(--line);
+    background:color-mix(in srgb, var(--brass) 7%, transparent);
+    display:flex; align-items:center; gap:.5em;
+  }
+  .table-card .th::before{ content:"▸"; color:var(--brass); font-size:11px; }
+  .table-card .tb{ padding:1rem 1.1rem; display:flex; flex-wrap:wrap; gap:.5rem; }
+  .tag{
+    font-family:var(--f-mono);
+    font-size:12.5px;
+    color:var(--muted);
+    border:1px solid var(--line-soft);
+    border-radius:4px;
+    padding:.32em .7em;
+    background:var(--ink);
+    transition:color .2s ease, border-color .2s ease;
+  }
+  .table-card:hover .tag{ color:var(--paper); }
+
+  /* ============ EXPERIENCE ============ */
+  .exp{
+    display:grid;
+    grid-template-columns:200px 1fr;
+    gap:clamp(1.5rem,4vw,3rem);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:clamp(1.5rem,3vw,2.2rem);
+    background:var(--ink-raised);
+  }
+  .exp .meta .co{ font-family:var(--f-display); font-weight:600; font-size:1.15rem; margin-bottom:.3rem; }
+  .exp .meta .when{ font-family:var(--f-mono); font-size:12.5px; color:var(--brass); }
+  .exp .meta .where{ font-family:var(--f-mono); font-size:12.5px; color:var(--muted-dim); margin-top:.15rem; }
+  .role-title{ font-family:var(--f-mono); font-size:14px; color:var(--paper); margin-bottom:1.2rem; }
+  .exp ul{ list-style:none; display:flex; flex-direction:column; gap:.9rem; }
+  .exp li{ color:var(--muted); padding-left:1.5rem; position:relative; line-height:1.55; }
+  .exp li::before{ content:"›"; position:absolute; left:0; color:var(--brass); font-family:var(--f-mono); }
+  .exp li b{ color:var(--paper); font-weight:500; }
+
+  /* ============ PROJECTS ============ */
+  .proj-head{ display:flex; flex-wrap:wrap; align-items:baseline; gap:.6rem 1rem; margin-bottom:.7rem; }
+  .proj-head h3{ font-family:var(--f-display); font-weight:600; font-size:clamp(1.4rem,3vw,1.9rem); letter-spacing:-0.02em; }
+  .proj-head .pill{ font-family:var(--f-mono); font-size:12px; color:var(--cyan); border:1px solid var(--line); border-radius:100px; padding:.25em .8em; }
+  .proj-stack{ font-family:var(--f-mono); font-size:13px; color:var(--muted-dim); margin-bottom:.9rem; }
+  .proj-intro{ color:var(--muted); max-width:60ch; margin-bottom:2rem; }
+  .modules{ display:grid; grid-template-columns:repeat(2,1fr); gap:1.1rem; }
+  .module{
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:1.4rem;
+    background:var(--ink-raised);
+    transition:border-color .25s ease, transform .25s ease;
+  }
+  .module:hover{ border-color:var(--brass-dim); transform:translateY(-3px); }
+  .module .mname{ font-family:var(--f-mono); font-size:14px; color:var(--brass); margin-bottom:.6rem; }
+  .module p{ color:var(--muted); font-size:.96rem; line-height:1.55; }
+
+  /* ============ EDUCATION ============ */
+  .edu-row{
+    display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:.4rem 1.5rem;
+    padding:1.3rem 0; border-bottom:1px solid var(--line-soft);
+  }
+  .edu-row:last-child{ border-bottom:0; }
+  .edu-row .deg{ font-family:var(--f-display); font-weight:500; font-size:1.12rem; }
+  .edu-row .inst{ color:var(--muted); font-size:.96rem; }
+  .edu-row .yr{ font-family:var(--f-mono); font-size:13px; color:var(--brass); white-space:nowrap; }
+
+  /* ============ CONTACT ============ */
+  .contact{ text-align:center; }
+  .contact .sec-head{ font-size:clamp(2rem,6vw,3.4rem); }
+  .contact .lead{ color:var(--muted); max-width:52ch; margin:0 auto 2.6rem; font-size:1.1rem; }
+  .contact .cta-row{ justify-content:center; }
+  .email-line{
+    font-family:var(--f-mono);
+    font-size:clamp(15px,3vw,22px);
+    color:var(--paper);
+    margin-bottom:2rem;
+    display:inline-flex; align-items:center; gap:.7em;
+    cursor:pointer;
+    border-bottom:1px dashed var(--line);
+    padding-bottom:.3em;
+    transition:color .2s ease, border-color .2s ease;
+  }
+  .email-line:hover{ color:var(--brass); border-color:var(--brass); }
+  .email-line .copy{ font-size:12px; color:var(--muted-dim); }
+
+  /* ============ FOOTER ============ */
+  footer{ border-top:1px solid var(--line-soft); background:var(--ink-deep); padding:2.2rem 0; }
+  .foot-inner{ display:flex; flex-wrap:wrap; justify-content:space-between; gap:1rem; align-items:center; }
+  .foot-inner .f{ font-family:var(--f-mono); font-size:12.5px; color:var(--muted-dim); }
+  .foot-inner .f b{ color:var(--muted); font-weight:400; }
+  .foot-links{ display:flex; gap:1.5rem; }
+  .foot-links a{ font-family:var(--f-mono); font-size:12.5px; color:var(--muted); transition:color .2s ease; }
+  .foot-links a:hover{ color:var(--brass); }
+
+  /* ============ REVEAL ============ */
+  .reveal{ opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:none; }
+
+  :focus-visible{ outline:2px solid var(--brass); outline-offset:3px; border-radius:3px; }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width:760px){
+    .nav-links{
+      position:fixed; inset:62px 0 auto 0;
+      flex-direction:column; align-items:flex-start; gap:0;
+      background:var(--ink-deep); border-bottom:1px solid var(--line);
+      padding:0; max-height:0; overflow:hidden;
+      transition:max-height .3s ease;
+    }
+    .nav-links.open{ max-height:340px; }
+    .nav-links a, .nav-links .nav-cta{ width:100%; padding:1rem var(--gut) !important; border:0; border-bottom:1px solid var(--line-soft); border-radius:0; }
+    .nav-toggle{
+      display:flex; flex-direction:column; gap:5px; background:none; border:0; cursor:pointer; padding:6px;
+    }
+    .nav-toggle span{ width:22px; height:2px; background:var(--paper); transition:transform .25s ease, opacity .25s ease; }
+    .nav-toggle.open span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2){ opacity:0; }
+    .nav-toggle.open span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
+    .about-grid{ grid-template-columns:1fr; }
+    .schema{ grid-template-columns:1fr; }
+    .exp{ grid-template-columns:1fr; }
+    .modules{ grid-template-columns:1fr; }
+    body::before{ opacity:.3; }
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation:none !important; transition:none !important; }
+    .reveal{ opacity:1; transform:none; }
+  }
+</style>
+</head>
+
+<body>
+
+<!-- ============ NAV ============ -->
+<nav>
+  <div class="wrap nav-inner">
+    <a href="#top" class="brand">ankit<span>.</span>vishwakarma</a>
+    <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-links">
+      <a href="#about">about</a>
+      <a href="#skills">skills</a>
+      <a href="#experience">experience</a>
+      <a href="#projects">projects</a>
+      <a href="#contact" class="nav-cta">Get in touch</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="query reveal">
+      <span class="cmt">-- portfolio.sql</span><br>
+      <span class="kw">SELECT</span> developer<br>
+      <span class="kw">FROM</span>&nbsp;&nbsp; backend_engineers<br>
+      <span class="kw">WHERE</span>&nbsp; stack = <span class="str">'Oracle PL/SQL'</span><br>
+      &nbsp;&nbsp;<span class="kw">AND</span>&nbsp; delivers_on_time = <span class="bool">TRUE</span>;
+    </div>
+    <div class="query-foot reveal">1 row returned</div>
+
+    <h1 class="reveal">Ankit<br>Vishwakarma</h1>
+    <div class="role reveal">Oracle PL/SQL Developer · 4 years experience</div>
+    <p class="pitch reveal">I build and tune the database backend behind enterprise telecom systems — <b>stored procedures, workflows, and data layers</b> that stay fast and correct across thousands of sites.</p>
+
+    <div class="badges reveal">
+      <span class="badge"><span class="dot live"></span>Open to PL/SQL &amp; backend roles</span>
+      <span class="badge">Available for freelance</span>
+      <span class="badge">Delhi NCR · Remote</span>
+    </div>
+
+    <div class="cta-row reveal">
+      <a href="mailto:ankitvishwakarma397@gmail.com" class="btn btn-primary">Email me</a>
+      <a href="https://linkedin.com/in/your-handle" target="_blank" rel="noopener" class="btn btn-ghost">LinkedIn ↗</a>
+      <a href="resume.pdf" target="_blank" rel="noopener" class="btn btn-ghost">Download résumé ↓</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ ABOUT ============ -->
+<section class="block" id="about">
+  <div class="wrap">
+    <div class="eyebrow reveal">about</div>
+    <div class="about-grid">
+      <div class="about-body reveal">
+        <p>Oracle PL/SQL developer with <b>four years</b> building and optimizing database solutions for enterprise telecom products. I've owned core modules — <b>Trouble Ticketing, Preventive Maintenance, and Access Management</b> — from design through delivery.</p>
+        <p>My day-to-day spans <b>Oracle, PostgreSQL, and MSSQL</b>, with Camunda for workflow automation. I like problems where correctness and performance both matter, and I'm comfortable owning a module end-to-end on a small team.</p>
+        <p class="offclock"><b>Off the clock:</b> trekking and gardening.</p>
+      </div>
+      <div class="stats reveal">
+        <div class="stat"><span class="n">4 yrs</span><span class="l">building database backends</span></div>
+        <div class="stat"><span class="n">10–15</span><span class="l">change requests delivered end-to-end</span></div>
+        <div class="stat"><span class="n">1000s</span><span class="l">of tower sites supported</span></div>
+        <div class="stat"><span class="n">3</span><span class="l">RDBMS platforms in production</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SKILLS ============ -->
+<section class="block" id="skills">
+  <div class="wrap">
+    <div class="eyebrow reveal">skills</div>
+    <h2 class="sec-head reveal">The toolkit</h2>
+    <p class="sec-sub reveal">Grouped the way I think about them — like tables in a well-designed schema.</p>
+
+    <div class="schema">
+      <div class="table-card reveal">
+        <div class="th">languages</div>
+        <div class="tb">
+          <span class="tag">SQL</span><span class="tag">PL/SQL</span><span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span>
+        </div>
+      </div>
+      <div class="table-card reveal">
+        <div class="th">databases</div>
+        <div class="tb">
+          <span class="tag">Oracle</span><span class="tag">PostgreSQL</span><span class="tag">MSSQL</span>
+        </div>
+      </div>
+      <div class="table-card reveal" style="grid-column:1 / -1;">
+        <div class="th">plsql_expertise</div>
+        <div class="tb">
+          <span class="tag">Stored Procedures</span><span class="tag">Functions</span><span class="tag">Triggers</span><span class="tag">Cursors</span><span class="tag">Bulk Collect</span><span class="tag">Collections</span><span class="tag">Views &amp; Materialized Views</span><span class="tag">Indexing</span><span class="tag">Partitioning</span><span class="tag">Performance Tuning</span><span class="tag">Query Optimization</span><span class="tag">Joins</span><span class="tag">Normalization</span>
+        </div>
+      </div>
+      <div class="table-card reveal">
+        <div class="th">tools</div>
+        <div class="tb">
+          <span class="tag">SQL Developer</span><span class="tag">pgAdmin</span><span class="tag">DBeaver</span><span class="tag">Postman</span>
+        </div>
+      </div>
+      <div class="table-card reveal">
+        <div class="th">workflow_bpm</div>
+        <div class="tb">
+          <span class="tag">Camunda</span><span class="tag">BPMN</span><span class="tag">Approval Workflows</span><span class="tag">Notifications</span>
+        </div>
+      </div>
+      <div class="table-card reveal" style="grid-column:1 / -1;">
+        <div class="th">practices</div>
+        <div class="tb">
+          <span class="tag">SVN</span><span class="tag">Jira</span><span class="tag">Unit Testing</span><span class="tag">Agile</span><span class="tag">Code Review</span><span class="tag">GDL</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EXPERIENCE ============ -->
+<section class="block" id="experience">
+  <div class="wrap">
+    <div class="eyebrow reveal">experience</div>
+    <h2 class="sec-head reveal">Where I've worked</h2>
+    <p class="sec-sub reveal">Four years on one product, going deep.</p>
+
+    <div class="exp reveal">
+      <div class="meta">
+        <div class="co">Infozech Software</div>
+        <div class="when">Dec 2021 — Present</div>
+        <div class="where">Delhi, India</div>
+        <div class="role-title" style="margin-top:1rem;">Software Engineer</div>
+      </div>
+      <ul>
+        <li>Build and maintain the <b>Oracle PL/SQL backend</b> — stored procedures, functions, and triggers — for iTower, a platform managing thousands of tower sites.</li>
+        <li>Led <b>end-to-end delivery of 10–15 change requests</b> with a 2–3 member team, consistently shipping on schedule within a 15–20 member group.</li>
+        <li>Spent <b>6–8 months on the L3 support team</b>, resolving complex production and database issues within SLA.</li>
+        <li>Designed <b>approval and notification workflows in Camunda (BPMN)</b>, cutting manual coordination across teams.</li>
+        <li>Tuned complex SQL and optimized indexes to speed up heavily-used reports and transactional screens.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROJECTS ============ -->
+<section class="block" id="projects">
+  <div class="wrap">
+    <div class="eyebrow reveal">projects</div>
+    <h2 class="sec-head reveal">Selected work</h2>
+    <p class="sec-sub reveal">The platform I've spent four years building the backend for.</p>
+
+    <div class="reveal">
+      <div class="proj-head">
+        <h3>iTower (iMaintain O&amp;M)</h3>
+        <span class="pill">Telecom · Tower Infrastructure</span>
+      </div>
+      <div class="proj-stack">Oracle · PostgreSQL · PL/SQL · Camunda&nbsp;&nbsp;|&nbsp;&nbsp;Role: PL/SQL Developer (Database)&nbsp;&nbsp;|&nbsp;&nbsp;Team: 2–3</div>
+      <p class="proj-intro">A platform to schedule, track, and monitor maintenance activities across thousands of telecom tower sites. I owned the database modules below end-to-end.</p>
+
+      <div class="modules">
+        <div class="module">
+          <div class="mname">Trouble Ticketing</div>
+          <p>Complete ticket lifecycle in PL/SQL — creation, assignment, escalation, and resolution — with Camunda handling approvals and notifications.</p>
+        </div>
+        <div class="module">
+          <div class="mname">Preventive Maintenance</div>
+          <p>Logic that schedules recurring site visits, updates their status automatically, and flags SLA breaches before they're missed.</p>
+        </div>
+        <div class="module">
+          <div class="mname">Access Management</div>
+          <p>Role- and permission-based logic controlling what each user can see and do across every module of the platform.</p>
+        </div>
+        <div class="module">
+          <div class="mname">Data Layer</div>
+          <p>Designed and tuned the large, complex tables and procedures behind these modules, with validation that keeps data consistent across Oracle and PostgreSQL.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ EDUCATION ============ -->
+<section class="block" id="education">
+  <div class="wrap">
+    <div class="eyebrow reveal">education</div>
+    <h2 class="sec-head reveal">Education</h2>
+    <div style="margin-top:1.5rem;">
+      <div class="edu-row reveal">
+        <div>
+          <div class="deg">Master of Computer Applications (MCA)</div>
+          <div class="inst">GL Bajaj Institute of Technology &amp; Management · Greater Noida</div>
+        </div>
+        <div class="yr">2020 — 2022</div>
+      </div>
+      <div class="edu-row reveal">
+        <div>
+          <div class="deg">Bachelor of Computer Applications (BCA)</div>
+          <div class="inst">IIMT College of Management · Greater Noida</div>
+        </div>
+        <div class="yr">2017 — 2020</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="block contact" id="contact">
+  <div class="wrap">
+    <div class="eyebrow reveal" style="justify-content:center;">contact</div>
+    <h2 class="sec-head reveal">Let's build something</h2>
+    <p class="lead reveal">Open to PL/SQL and backend developer roles in Delhi NCR or remote — and freelance database projects. The fastest way to reach me is email.</p>
+
+    <div class="reveal">
+      <div class="email-line" id="emailCopy" title="Click to copy">
+        ankitvishwakarma397@gmail.com
+        <span class="copy">click to copy</span>
+      </div>
+    </div>
+
+    <div class="cta-row reveal">
+      <a href="mailto:ankitvishwakarma397@gmail.com" class="btn btn-primary">Email me</a>
+      <a href="https://linkedin.com/in/your-handle" target="_blank" rel="noopener" class="btn btn-ghost">LinkedIn ↗</a>
+      <a href="tel:+917376434359" class="btn btn-ghost">Call ↗</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap foot-inner">
+    <div class="f">Designed &amp; built by <b>Ankit Vishwakarma</b> · 2026</div>
+    <div class="foot-links">
+      <a href="mailto:ankitvishwakarma397@gmail.com">email</a>
+      <a href="https://linkedin.com/in/your-handle" target="_blank" rel="noopener">linkedin</a>
+      <a href="#top">back to top ↑</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // mobile nav
+  const toggle = document.querySelector('.nav-toggle');
+  const links = document.querySelector('.nav-links');
+  toggle.addEventListener('click', () => {
+    const open = links.classList.toggle('open');
+    toggle.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open);
+  });
+  links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    links.classList.remove('open'); toggle.classList.remove('open'); toggle.setAttribute('aria-expanded', false);
+  }));
+
+  // scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // copy email
+  const emailEl = document.getElementById('emailCopy');
+  const copyLabel = emailEl.querySelector('.copy');
+  emailEl.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText('ankitvishwakarma397@gmail.com');
+      copyLabel.textContent = 'copied ✓';
+      setTimeout(() => copyLabel.textContent = 'click to copy', 1800);
+    } catch(e){ copyLabel.textContent = 'select & copy'; }
+  });
+</script>
+</body>
+</html>
